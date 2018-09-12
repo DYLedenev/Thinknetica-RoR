@@ -2,9 +2,9 @@
 # после чего выводит результат пользователю на экран с обращением по имени.
 # Если идеальный вес получается отрицательным, то выводится строка "Ваш вес уже оптимальный"
 
-puts "What is your name?"
+puts 'What is your name?'
 name = gets.chomp
-puts "Please enter your height:"
+puts 'Please enter your height:'
 height = gets.chomp.to_i
 
 ideal_weight = height - 110

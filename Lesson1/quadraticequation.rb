@@ -11,14 +11,14 @@
 # Math.sqrt(16)
 # вернет 4, т.е. квадратный корень из 16.
 
-puts "Enter an A value:"
+puts 'Enter an A value:'
 a = gets.chomp.to_i
-puts "Enter a B value:"
+puts 'Enter a B value:'
 b = gets.chomp.to_i
-puts "Enter a C value:"
+puts 'Enter a C value:'
 c = gets.chomp.to_i
 
-d = b**2 - 4*a*c
+d = b**2 - 4 * a * c
 q = Math.sqrt(d)
 
 if d > 0
@@ -29,5 +29,5 @@ elsif d == 0
   x = –b / (2 * a)
   puts "The roots are X1 = X2 = #{x}"
 else
-  puts "There are no roots"
+  puts 'There are no roots'
 end
