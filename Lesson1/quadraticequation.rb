@@ -12,11 +12,11 @@
 # вернет 4, т.е. квадратный корень из 16.
 
 puts 'Enter an A value:'
-a = gets.chomp.to_i
+a = gets.chomp.to_f
 puts 'Enter a B value:'
-b = gets.chomp.to_i
+b = gets.chomp.to_f
 puts 'Enter a C value:'
-c = gets.chomp.to_i
+c = gets.chomp.to_f
 
 d = b**2 - 4 * a * c
 q = Math.sqrt(d)
