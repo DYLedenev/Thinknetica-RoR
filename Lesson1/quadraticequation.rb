@@ -16,7 +16,7 @@ a = gets.chomp.to_f
 puts 'Enter a B value:'
 b = gets.chomp.to_f
 puts 'Enter a C value:'
-c = gets.chomp.to_f
+c = gets.chomp.to_f 
 
 d = b**2 - 4 * a * c
 
