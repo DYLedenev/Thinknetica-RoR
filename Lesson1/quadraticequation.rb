@@ -19,10 +19,11 @@ puts "Enter a C value:"
 c = gets.chomp.to_i
 
 d = b**2 - 4*a*c
+q = Math.sqrt(d)
 
 if d > 0
-  х1 = (–b + c) / (2 * a)
-  x2 = (–b – c) / (2 * a)
+  х1 = (–b + q) / (2 * a)
+  x2 = (–b – q) / (2 * a)
   puts "The roots are X1 = #{x1} and X2 = #{x2}"
 elsif d == 0
   x = –b / (2 * a)
