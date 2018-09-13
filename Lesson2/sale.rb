@@ -3,11 +3,11 @@ summ = 0
 loop do
   puts 'Enter the purchase name'
   item = gets.chomp.to_s
+  break if item == 'stop'
   puts 'Enter the price per piece'
   price = gets.chomp.to_i
   puts 'Enter the number of pieces you bought'
   pcs = gets.chomp.to_f
-  break if item == 'stop' || price == 'stop' || pcs == 'stop'
   hash[item] = { price => pcs }
 end
 
