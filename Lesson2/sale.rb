@@ -13,6 +13,6 @@ end
 
 hash.each { |_key, value| value.each { |subkey, subvalue| summ += subkey * subvalue } }
 hash.each do |key, value|
-  puts " - is a price for #{key}:#{value.each { |subkey, subvalue| puts (subkey * subvalue).to_s }} \n"
+  puts "- is a price for #{key}:#{value.each { |subkey, subvalue| puts (subkey * subvalue).to_s }} \n"
 end
 puts "TOTAL price is: #{summ}"
