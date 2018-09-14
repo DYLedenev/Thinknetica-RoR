@@ -9,7 +9,7 @@ puts 'Введите год'
 year = gets.chomp.to_f
 
 i = 0
-while i < months.length - (months.length - month)
+while i < month
   sum += months[i] # calculating the sum of the days in each months altogether with the entered one
   i += 1
 end
