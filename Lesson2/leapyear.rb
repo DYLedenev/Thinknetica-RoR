@@ -6,7 +6,7 @@ day = gets.chomp.to_i
 puts 'Введите месяц'
 month = gets.chomp.to_i
 puts 'Введите год'
-year = gets.chomp.to_f
+year = gets.chomp.to_i
 
 i = 0
 while i < month
@@ -14,10 +14,10 @@ while i < month
   i += 1
 end
 
-if ((year % 4).zero? || !(year % 100).zero?) && (year % 400).zero?
+if ((year % 4.0).zero? || !(year % 100).zero?) && (year % 400).zero?
   sum = sum - months[month] + day
 else
   sum = sum - months[month] + day - 1
 end
 
-puts "#{day}-#{month}-#{year.to_i} - это #{sum}й день в году"
+puts "#{day}-#{month}-#{year} - это #{sum}й день в году"
