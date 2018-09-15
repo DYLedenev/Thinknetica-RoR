@@ -76,13 +76,13 @@ class Train
 
   def add_wagon
     # puts "current speed:#{@speed}. Should be 0"
-    @wagons += 1 if speed?.zero?
+    @wagons += 1 if @speed.zero?
     puts "number of wagons: #{@wagons}"
   end
 
   def delete_wagon
     # puts "current speed:#{@speed}. Should be 0"
-    @wagons -= 1 if speed?.zero?
+    @wagons -= 1 if @speed.zero?
     puts "number of wagons: #{@wagons}"
   end
 
