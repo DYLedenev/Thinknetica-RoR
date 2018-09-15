@@ -30,6 +30,8 @@ end
 # class Route
 class Route
   attr_accessor :stations
+q
+q
 
   def initialize(station1, station2)
     @stations = [station1.name, station2.name]
