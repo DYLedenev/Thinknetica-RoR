@@ -9,16 +9,15 @@ class Station
   end
 
   def receive(train)
-    @trains[train.number] = train.type
+    @trains[train.number] = train
   end
 
-  def trains?
+  def trains_list
     puts "Train on this station: #{@trains.keys.each { |key| puts key }}"
   end
 
   def trains_type_amount
-    trains_by_type = @trains.group_by { |_number, type| type }
-    trains_by_type.each { |type, numbers| puts "#{type} trains: #{numbers.length}" }
+    @trains.group_by { |_n, type| type }.each { |type, num| puts "#{type} trains: #{num.length}" }
   end
 
   def departure(train, where)
@@ -29,19 +28,18 @@ end
 
 # class Route
 class Route
-  attr_accessor :stations
+  attr_reader :stations
 
   def initialize(station1, station2)
-    @stations = [station1.name, station2.name]
+    @stations = [station1, station2]
   end
 
   def add(station)
-    @stations.insert(-2, station.name)
+    @stations.insert(-2, station)
   end
 
   def delete(station)
-    station = station.name
-    @stations.delete_if { |name| name == station }
+    @stations.delete(station)
   end
 
   def list
@@ -121,7 +119,7 @@ class Train
     end
   end
 
-  def station?
+  def current_station
     if @route.index(@station) + 1 <= @route.length
       puts "Current station: #{@station}, \n Previous station: #{previous_station}."
     elsif @route.index(@station).zero?
