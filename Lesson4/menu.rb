@@ -22,9 +22,9 @@ class Menu < Console
       move_train if choice == 9
       show_stations if choice == 10
       show_trains_on_station if choice == 11
-      puts 'select one of the available options, from 0 to 12' unless (0..12).cover?choice
-      # i have chosen 12 for exit instead of 0 because if  the user enters any non-numberic symbol
-      # or hits enter it will be converted to 0 by to_i
+      puts 'select one of the available options, from 0 to 12' unless (0..12).cover?(choice)
+      # i have chosen 12 for exit instead of 0 because if the user enters any non-numberic symbol
+      # or hits enter it will be converted to 0 by to_i and program will quit.
       break if choice == 12
     end
   end
