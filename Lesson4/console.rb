@@ -46,28 +46,30 @@ class Console < Question
     puts 'the route with this number doesn\'t exist' unless @routes.include?(route_number)
     station_name = ask_for_station
     puts "the station with this name doesn't exist. Existing stations: #{@stations.keys}" unless @stations.include?(station_name)
-    @routes[route_number].add(@stations[station_name]) if @stations.include?(station_name)
-    puts "station #{station_name} successfully added to route ##{route_number}"
+    include_station_to_route(station_name, route_number)
   end
 
   def delete_station_from_route
     route_number = ask_for_route
     puts 'there is no route with this number' unless @routes.include?(route_number)
     station_name = ask_for_station_in_route
-    if @routes[route_number].stations.include?(@stations[station_name])
-      @routes[route_number].delete(@stations[station_name])
-      puts "station #{station_name} has been removed from the route ##{route_number}"
+    if route_has_station?(route_number, station_name)
+      route_delete_station(route_number, station_name)
     else
-      puts "there is no such station in the list: #{@routes[route_number].stations.each(&:name)}"
+      puts "there is no such station in the list: #{show_stations_in_route(route_number)}"
     end
+  end
+
+  def assign_route_to_train(train_number, route_number)
+    @trains[train_number].assign_route(@routes[route_number])
+    puts "route #{route_number} successfully assigned to the train ##{train_number}"
   end
 
   def set_route_to_train
     train_number = ask_for_train
     route_number = ask_for_route
     if @trains.include?(train_number) && @routes.include?(route_number)
-      @trains[train_number].assign_route(@routes[route_number])
-      puts "route #{route_number} successfully assigned to the train ##{train_number}"
+      assign_route_to_train(train_number, route_number)
     else
       puts 'cannot find this route or train number'
     end
@@ -99,14 +101,9 @@ class Console < Question
   def move_train
     train_number = ask_for_train
     move = ask_where_to_move
-    if move == 1
-      @trains[train_number].resite('forward') unless @trains[train_number].next_station.nil?
-    elsif move == 2
-      @trains[train_number].resite('backward') unless @trains[train_number].previous_station.nil?
-    else
-      puts 'select option 1 or 2'
-    end
-    puts "train ##{train_number} is moved to #{@trains[train_number].station.name}"
+    move_train_forward(@trains[train_number]) if move == 1
+    move_train_backward(@trains[train_number]) if move == 2
+    puts 'select option 1 or 2' unless move.between?(1, 2)
   end
 
   def show_stations
@@ -117,5 +114,40 @@ class Console < Question
     station = ask_for_station
     @stations[station].trains if @stations.include?(station)
     puts "cannot find this station in the list:#{@stations.keys}" unless @stations.include?(station)
+  end
+
+  protected # console has a child class menu so I picked protected option.
+
+  def move_train_forward(train)
+    train.resite('forward')
+    puts "train ##{train.number} is moved to #{train.station.name}"
+  end
+
+  def move_train_backward(train)
+    train.resite('backward')
+    puts "train ##{train.number} is moved to #{train.station.name}"
+  end
+
+  def route_has_station?(route_number, station_name)
+    @routes[route_number].stations.include?(@stations[station_name])
+  end
+
+  def route_delete_station(route_number, station_name)
+    @routes[route_number].delete(@stations[station_name])
+    puts "station #{station_name} has been removed from the route ##{route_number}"
+  end
+
+  def show_stations_in_route(route_number)
+    @routes[route_number].stations.each(&:name)
+  end
+
+  def include_station_to_route(station_name, route_number)
+    if @stations.include?(station_name)
+      @routes[route_number].add(@stations[station_name])
+      puts "station #{station_name} successfully added to route ##{route_number}"
+    else
+      puts "cannot find station with this name. Existing stations:"
+      show_stations
+    end
   end
 end

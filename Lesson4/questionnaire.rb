@@ -4,6 +4,8 @@
 # 7. add wagon to train. 8. remove wagon from train, 9. move train forward or backward
 # 10. show stations list, 11. show trains list per station
 class Question
+  protected # all these methods are helping console to get the data from user.
+
   def ask_station_name
     puts 'Enter the new station\'s name:'
     gets.chomp
