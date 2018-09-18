@@ -1,61 +1,12 @@
-# class Station
-class Station
-  attr_accessor :trains
-  attr_reader :name
-
-  def initialize(name)
-    @name = name
-    @trains = {}
-  end
-
-  def receive(train)
-    @trains[train.number] = train
-  end
-
-  def trains_list
-    puts "Train on this station: #{@trains.keys.each { |key| puts key }}"
-  end
-
-  def trains_type_amount
-    @trains.group_by { |_n, type| type }.each { |type, num| puts "#{type} trains: #{num.length}" }
-  end
-
-  def departure(train, where)
-    train.move(where)
-    @trains.delete(train.number)
-  end
-end
-
-# class Route
-class Route
-  attr_reader :stations
-
-  def initialize(station1, station2)
-    @stations = [station1, station2]
-  end
-
-  def add(station)
-    @stations.insert(-2, station)
-  end
-
-  def delete(station)
-    @stations.delete(station)
-  end
-
-  def list
-    puts @stations
-  end
-end
-
 # class Train
 class Train
   attr_accessor :speed, :route
-  attr_reader :number, :wagons, :type
+  attr_reader :number, :wagons, :type, :station
 
-  def initialize(number, type, wagons)
+  def initialize(number)
     @number = number
     @type = type
-    @wagons = wagons
+    @wagons = []
     @route = []
     @speed = 0
   end
@@ -72,14 +23,14 @@ class Train
     @speed = 0
   end
 
-  def add_wagon
-    @wagons += 1 if @speed.zero?
-    puts "number of wagons: #{@wagons}"
+  def add_wagon(wagon)
+    @wagons << wagon if @speed.zero?
+    puts "Current speed - #{@speed}. Should be zero (0). Stop the train first." unless @speed.zero?
   end
 
-  def delete_wagon
-    @wagons -= 1 if @speed.zero?
-    puts "number of wagons: #{@wagons}"
+  def delete_wagon(wagon)
+    @wagons.delete(wagon) if @speed.zero?
+    puts "Current speed - #{@speed}. Should be zero (0). Stop the train first." unless @speed.zero?
   end
 
   def assign_route(route)
@@ -120,7 +71,9 @@ class Train
     elsif @route.index(@station).zero?
       puts "Current station: #{@station}, \n Next station: #{next_station}."
     else
-      puts "Current station: #{@station}, \nPrevious station: #{previous_station}, \nNext station: #{next_station}.}"
+      puts "Current station: #{@station},
+            \nPrevious station: #{previous_station},
+            \nNext station: #{next_station}.}"
     end
   end
 end
