@@ -12,30 +12,32 @@ class Console < Question
 
   def create_station
     name = ask_station_name
-    puts 'The name cannot be empty' if name == ''
+    puts 'The name cannot be empty' if name.blank?
     @stations[name] = Station.new(name)
     puts "Station #{name} has been created"
   end
 
   def create_train
-    new_train = create_new_train_questions
-    if new_train[0] == 1
-      train = CargoTrain.new(new_train[1]) unless @trains.include?(new_train[1])
-    elsif new_train[0] == 2
-      train = PassengerTrain.new(new_train[1]) unless @trains.include?(new_train[1])
+    new_train_type = create_new_train_questions[0]
+    new_train_number = create_new_train_questions[1]
+    if new_train_type == 1
+      train = CargoTrain.new(new_train_number) unless @trains.include?(new_train_number)
+    elsif new_train_type == 2
+      train = PassengerTrain.new(new_train_number) unless @trains.include?(new_train_number)
     else
       puts 'Select between 1 or 2'
     end
-    @trains[new_train[1]] = train
+    @trains[new_train_number] = train
     puts "#{train.type} train ##{train.number} has been created"
   end
 
   def create_route
-    new_route = create_new_route_questions
-    puts 'route with the same number already exists' if @routes.include?(new_route[2])
-    if @stations.include?(new_route[0]) && @stations.include?(new_route[1])
-      @routes[new_route[2]] = Route.new(@stations[new_route[0]], @stations[new_route[1]])
-      puts "route ##{new_route[2]} from #{new_route[0]} to #{new_route[1]} has been created"
+    new_route_stations = create_new_route_questions[0..1]
+    new_route_number = create_new_route_questions[2]
+    puts 'route with the same number already exists' if @routes.include?(new_route_number)
+    if @stations.include?(new_route_stations[0]) && @stations.include?(new_route_stations[1])
+      @routes[new_route_number] = Route.new(@stations[new_route_stations[0]], @stations[new_route_stations[1]])
+      puts "route ##{new_route_number} from #{new_route_stations[0]} to #{new_route_stations[1]} has been created"
     else
       puts "cannot find one of the inputed stations. Existing stations: #{@stations.keys}"
     end

@@ -12,11 +12,13 @@ class Station
   end
 
   def trains_list
-    puts "Trains on this station: #{@trains.keys.each { |key| puts key }}"
+    train_numbers = @trains.keys.each { |key| puts key }
+    puts "Trains on this station: #{train_numbers}"
   end
 
   def trains_type_amount
-    @trains.group_by { |_n, type| type }.each { |type, num| puts "#{type} trains: #{num.length}" }
+    train_types = @trains.group_by { |_n, type| type }
+    train_types.each { |type, num| puts "#{type} trains: #{num.length}" }
   end
 
   def departure(train, way)
