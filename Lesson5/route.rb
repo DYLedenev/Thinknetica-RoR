@@ -5,6 +5,7 @@ class Route
 
   def initialize(station1, station2)
     @stations = [station1, station2]
+    register_instance
   end
 
   def add(station)
@@ -16,6 +17,6 @@ class Route
   end
 
   def list
-    puts @stations
+    @stations
   end
 end

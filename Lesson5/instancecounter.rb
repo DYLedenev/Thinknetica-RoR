@@ -9,11 +9,8 @@ module InstanceCounter
     attr_reader :instances
 
     def raise_instance
-      if @instances.nil?
-        @instances = 1
-      else
-        @instances += 1
-      end
+      @instances ||= 0
+      @instances += 1
     end
   end
   # instance methods mixin

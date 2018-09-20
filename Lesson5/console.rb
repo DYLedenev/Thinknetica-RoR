@@ -116,7 +116,7 @@ class Console
 
   def show_trains_on_station
     station = ask_for_station
-    @stations[station].trains if @stations.include?(station)
+    puts "Trains on this station: #{@stations[station].trains_list}" if @stations.include?(station)
     puts "cannot find this station in the list:#{@stations.keys}" unless @stations.include?(station)
   end
 

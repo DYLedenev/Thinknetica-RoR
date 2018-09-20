@@ -2,8 +2,7 @@
 class Train
   include Manufacturer
   include InstanceCounter
-  attr_accessor :speed, :route
-  attr_reader :number, :wagons, :type, :station
+  attr_reader :number, :wagons, :type, :station, :speed, :route
 
   @@train_objects = {}
 
@@ -18,14 +17,11 @@ class Train
     @route = []
     @speed = 0
     @@train_objects[number] = self
+    register_instance
   end
 
   def speed_add(speed)
     @speed += speed
-  end
-
-  def speed?
-    puts "train current speed is: #{@speed}"
   end
 
   def stop
@@ -43,25 +39,28 @@ class Train
   end
 
   def assign_route(route)
-    route = route.stations
-    route.each { |station| @route << station }
+    route.stations.each { |station| @route << station }
     @station = route[0]
   end
 
+  def station_position
+    @route.index(@station)
+  end
+
   def last_station?
-    @route.index(@station) + 1 == @route.length
+    station_position + 1 == @route.length
   end
 
   def first_station?
-    @route.index(@station).zero?
+    station_position.zero?
   end
 
   def next_station
-    @route[@route.index(@station) + 1]
+    @route[station_position + 1]
   end
 
   def previous_station
-    @route[@route.index(@station) - 1]
+    @route[station_position - 1]
   end
 
   def resite(way)
@@ -75,9 +74,9 @@ class Train
   end
 
   def current_station
-    if @route.index(@station) + 1 <= @route.length
+    if last_station?
       puts "Current station: #{@station}, \n Previous station: #{previous_station}."
-    elsif @route.index(@station).zero?
+    elsif station_position.zero?
       puts "Current station: #{@station}, \n Next station: #{next_station}."
     else
       puts "Current station: #{@station},
@@ -85,4 +84,8 @@ class Train
             \nNext station: #{next_station}.}"
     end
   end
+
+  protected
+
+  attr_writer :speed, :route
 end

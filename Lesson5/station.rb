@@ -12,6 +12,7 @@ class Station
     @name = name
     @trains = {}
     add_exemplar
+    register_instance
   end
 
   def receive(train)
@@ -19,8 +20,7 @@ class Station
   end
 
   def trains_list
-    train_numbers = @trains.keys.each { |key| puts key }
-    puts "Trains on this station: #{train_numbers}"
+    @trains.keys.each { |key| puts key }
   end
 
   def trains_type_amount
@@ -37,9 +37,5 @@ class Station
 
   def add_exemplar
     @@class_exemplars << self
-  end
-
-  def register_new_instance
-    register_instance
   end
 end
