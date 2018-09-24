@@ -14,7 +14,7 @@ class Console
 
   def create_station
     name = ask_station_name
-    puts 'The name cannot be empty' if name.blank?
+    puts 'The name cannot be empty' if name.empty?
     @stations[name] = Station.new(name)
     puts "Station #{name} has been created"
   end
