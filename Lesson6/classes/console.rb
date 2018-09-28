@@ -14,29 +14,27 @@ class Console
   def create_station
     new_station_name = ask_station_name
     @stations[new_station_name] = Station.new(new_station_name)
-    puts "LOG: Station #{new_station_name} has been created" if @stations[new_station_name]
   end
 
   def create_train
-    new_train_type = ask_for_new_train_number
-    new_train_number = ask_for_type
-    # train_exist?(new_train_number)
+    new_train_type = ask_for_type
+    new_train_number = ask_for_new_train_number
+    raise 'ERROR: Train with this number is alrady exist' if train_exist?(new_train_number)
     if new_train_type == 1
       train = CargoTrain.new(new_train_number)
     elsif new_train_type == 2
       train = PassengerTrain.new(new_train_number)
     end
     @trains[new_train_number] = train
-    puts "LOG: #{train.type} train ##{train.number} has been created" if @trains[new_train_number]
   end
 
   def create_route
     new_route_number = ask_for_new_route_number
-    stations = [ask_for_first_station, ask_for_second_station]
+    start_end_station = [ask_for_first_station, ask_for_second_station]
     raise 'ERROR: route with the same number already exists' if @routes.include?(new_route_number)
-    raise "ERROR: cannot find one of the inputed stations. Existing stations: #{@stations.keys}" unless stations_exist?(stations[0], stations[1])
-    @routes[new_route_number] = Route.new(@stations[stations[0]], @stations[stations[1]])
-    puts "LOG: route ##{new_route_number} from #{stations[0]} to #{stations[1]} has been created"
+    raise "ERROR: cannot find one of the inputed stations. Existing stations: #{@stations.keys}" unless stations_exist?(start_end_station[0], start_end_station[1])
+    @routes[new_route_number] = Route.new(@stations[start_end_station[0]], @stations[start_end_station[1]])
+    puts "#{new_route_number} = #{@routes[new_route_number]}"
   end
 
   def add_station_to_route
@@ -50,11 +48,6 @@ class Console
     ask_and_check_station
     raise "ERROR: there is no such station in the list: #{show_stations_in_route(route_number)}" unless route_has_station?(route_number, station_name)
     route_delete_station(route_number, station_name)
-  end
-
-  def assign_route_to_train(train_number, route_number)
-    @trains[train_number].assign_route(@routes[route_number])
-    puts "LOG: route #{route_number} successfully assigned to the train ##{train_number}"
   end
 
   def set_route_to_train
@@ -101,9 +94,13 @@ class Console
 
   protected # console has a child class menu so I picked protected option.
 
+  def assign_route_to_train(train_number, route_number)
+    @trains[train_number].assign_route(@routes[route_number])
+    puts "LOG: route #{route_number} successfully assigned to the train ##{train_number}"
+  end
+
   def train_exist?(new_train_number)
-    raise 'ERROR: Train with this number is alrady exist' if @trains.include?(new_train_number)
-    true
+    @trains.include?(new_train_number)
   end
 
   def stations_exist?(station1, station2)

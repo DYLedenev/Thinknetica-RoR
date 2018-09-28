@@ -8,15 +8,13 @@ class Train
   NUMBER_FORMAT = /^\w{3}\-*\w{2}$/im
 
   validate :number, :presence
-  validate :wagon, :presence
-  validate :route, :presence
+  # validate :wagon, :presence
+  # validate :route, :presence
   validate :number, :format, NUMBER_FORMAT
   # validate :wagon, :between_many_types, CargoWagon, PassengerWagon
   # validate :route, :type, Route
 
   @@train_objects = {}
-
-
 
   def self.find(number)
     @@train_objects[number]
@@ -31,6 +29,7 @@ class Train
     @@train_objects[number] = self
     register_instance
     valid?
+    puts "LOG: #{type} train ##{number} has been created"
   end
 
   def speed_add(speed)

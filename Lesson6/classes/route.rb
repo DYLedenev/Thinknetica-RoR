@@ -4,15 +4,13 @@ class Route
   include Validation
   attr_reader :stations
 
-  validate :station1, :presence
-  validate :station2, :presence
-  validate :station1, :type, Station
-  validate :station2, :type, Station
+  validate :stations, :presence
 
   def initialize(station1, station2)
     @stations = [station1, station2]
     register_instance
     valid?
+    puts "LOG: route from #{station1.name} to #{station2.name} has been created"
   end
 
   def add(station)

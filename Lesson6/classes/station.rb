@@ -17,6 +17,7 @@ class Station
     add_exemplar
     register_instance
     valid?
+    puts "LOG: Station #{name} has been created"
   end
 
   def receive(train)
