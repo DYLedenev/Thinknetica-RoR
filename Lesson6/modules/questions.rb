@@ -11,24 +11,29 @@ module Questions
     gets.chomp
   end
 
-  def create_new_train_questions
-    puts "QUESTION: Select new train\'s type? \n1 - Cargo \n2 - Passenger:"
-    type = gets.chomp.to_i
+  def ask_for_new_train_number
     puts 'QUESTION: Enter the new train\'s number:'
-    train_number = gets.chomp
-
-    [type, train_number]
+    gets.chomp
   end
 
-  def create_new_route_questions
-    puts "QUESTION: Enter the name of the first station. Existing stations: #{@stations.keys}}"
-    station1 = gets.chomp
-    puts "QUESTION: Enter the name of the last station. Existing stations: #{@stations.keys}"
-    station2 = gets.chomp
-    puts 'QUESTION: Enter the new route\' number'
-    route_number = gets.chomp
+  def ask_for_type
+    puts "QUESTION: Select new train\'s type? \n1 - Cargo \n2 - Passenger:"
+    gets.chomp.to_i
+  end
 
-    [station1, station2, route_number]
+  def ask_for_new_route_number
+    puts 'QUESTION: Enter the new route\' number'
+    gets.chomp
+  end
+
+  def ask_for_first_station
+    puts "QUESTION: Enter the name of the first station. Existing stations: #{@stations.keys}}"
+    gets.chomp
+  end
+
+  def ask_for_second_station
+    puts "QUESTION: Enter the name of the last station. Existing stations: #{@stations.keys}"
+    gets.chomp
   end
 
   def ask_for_route

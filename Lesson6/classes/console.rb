@@ -14,12 +14,12 @@ class Console
   def create_station
     new_station_name = ask_station_name
     @stations[new_station_name] = Station.new(new_station_name)
-    puts "LOG: Station #{new_station_name} has been created" if ask_station_name
+    puts "LOG: Station #{new_station_name} has been created" if @stations[new_station_name]
   end
 
   def create_train
-    new_train_type = create_new_train_questions[0]
-    new_train_number = create_new_train_questions[1]
+    new_train_type = ask_for_new_train_number
+    new_train_number = ask_for_type
     # train_exist?(new_train_number)
     if new_train_type == 1
       train = CargoTrain.new(new_train_number)
@@ -27,12 +27,12 @@ class Console
       train = PassengerTrain.new(new_train_number)
     end
     @trains[new_train_number] = train
-    puts "LOG: #{train.type} train ##{train.number} has been created"
+    puts "LOG: #{train.type} train ##{train.number} has been created" if @trains[new_train_number]
   end
 
   def create_route
-    new_route_number = create_new_route_questions[2]
-    stations = create_new_route_questions[0..1]
+    new_route_number = ask_for_new_route_number
+    stations = [ask_for_first_station, ask_for_second_station]
     raise 'ERROR: route with the same number already exists' if @routes.include?(new_route_number)
     raise "ERROR: cannot find one of the inputed stations. Existing stations: #{@stations.keys}" unless stations_exist?(stations[0], stations[1])
     @routes[new_route_number] = Route.new(@stations[stations[0]], @stations[stations[1]])

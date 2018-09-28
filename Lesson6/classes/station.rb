@@ -6,8 +6,6 @@ class Station
   @@class_exemplars = []
 
   validate :name, :presence
-  validate :train, :presence
-  # validate :train, :between_many_types, CargoTrain, PassengerTrain
 
   def self.all
     @@class_exemplars
