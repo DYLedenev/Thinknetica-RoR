@@ -30,6 +30,7 @@ class Train
     @speed = 0
     @@train_objects[number] = self
     register_instance
+    valid?
   end
 
   def speed_add(speed)

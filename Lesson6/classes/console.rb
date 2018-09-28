@@ -14,13 +14,13 @@ class Console
   def create_station
     new_station_name = ask_station_name
     @stations[new_station_name] = Station.new(new_station_name)
-    puts "LOG: Station #{new_station_name} has been created"
+    puts "LOG: Station #{new_station_name} has been created" if ask_station_name
   end
 
   def create_train
     new_train_type = create_new_train_questions[0]
     new_train_number = create_new_train_questions[1]
-    train_exist?(new_train_number)
+    # train_exist?(new_train_number)
     if new_train_type == 1
       train = CargoTrain.new(new_train_number)
     elsif new_train_type == 2

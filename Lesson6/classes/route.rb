@@ -12,6 +12,7 @@ class Route
   def initialize(station1, station2)
     @stations = [station1, station2]
     register_instance
+    valid?
   end
 
   def add(station)

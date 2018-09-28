@@ -18,6 +18,7 @@ class Station
     @trains = {}
     add_exemplar
     register_instance
+    valid?
   end
 
   def receive(train)
