@@ -1,4 +1,7 @@
-# general user interface Class.
+# A class which can: 1. create stations, 2. create trains, 3. create routes,
+# 4. remove station from route, 5. add station to route, 6. assign route to trains
+# 7. add wagon to train. 8. remove wagon from train, 9. move train forward or backward
+# 10. show stations list, 11. show trains list per station
 class Console
   include Validation
   include Questions
@@ -12,14 +15,23 @@ class Console
   end
 
   def create_station
+    attempt ||= 0
     new_station_name = ask_station_name
+    validate_station_name!(new_station_name)
     @stations[new_station_name] = Station.new(new_station_name)
     puts "LOG: Station #{new_station_name} has been created"
+  rescue RuntimeError => e
+    attempt += 1
+    puts "#{e}. Try again. Attempts left: #{3 - attempt}"
+    retry if attempt < 3
   end
 
   def create_train
+    attempt ||= 0
     new_train_type = create_new_train_questions[0]
+    ask_and_check_type(new_train_type)
     new_train_number = create_new_train_questions[1]
+    validate_train_number!(new_train_number)
     train_exist?(new_train_number)
     if new_train_type == 1
       train = CargoTrain.new(new_train_number)
@@ -28,15 +40,25 @@ class Console
     end
     @trains[new_train_number] = train
     puts "LOG: #{train.type} train ##{train.number} has been created"
+  rescue RuntimeError => e
+    attempt += 1
+    puts "#{e}. Try again. Attempts left: #{3 - attempt}"
+    retry if attempt < 3
   end
 
   def create_route
+    attempt ||= 0
     new_route_number = create_new_route_questions[2]
-    stations = create_new_route_questions[0..1]
+    validate!(new_route_number)
+    new_route_stations = create_new_route_questions[0..1]
     raise 'ERROR: route with the same number already exists' if @routes.include?(new_route_number)
-    raise "ERROR: cannot find one of the inputed stations. Existing stations: #{@stations.keys}" unless stations_exist?(stations[0], stations[1])
-    @routes[new_route_number] = Route.new(@stations[stations[0]], @stations[stations[1]])
-    puts "LOG: route ##{new_route_number} from #{stations[0]} to #{stations[1]} has been created"
+    raise "ERROR: cannot find one of the inputed stations. Existing stations: #{@stations.keys}" unless stations_exist?(new_route_stations[0], new_route_stations[1])
+    @routes[new_route_number] = Route.new(@stations[new_route_stations[0]], @stations[new_route_stations[1]])
+    puts "LOG: route ##{new_route_number} from #{new_route_stations[0]} to #{new_route_stations[1]} has been created"
+  rescue RuntimeError => e
+    attempt += 1
+    puts "#{e}. Try again. Attempts left: #{3 - attempt}"
+    retry if attempt < 3
   end
 
   def add_station_to_route
@@ -64,7 +86,7 @@ class Console
   end
 
   def add_wagon_to_train
-    ask_for_train_number
+    ask_and_check_train_number
     ask_and_check_wagon_number
     if @trains[train_number].class == CargoTrain
       wagon = CargoWagon.new
@@ -77,15 +99,15 @@ class Console
   end
 
   def remove_wagons_from_train
-    ask_for_train_number
+    ask_and_check_train_number
     ask_and_check_wagon_number
     @trains[train_number].delete_wagon(@wagons[wagon_number])
     puts "LOG: wagon #{wagon_number} has been seccessfully removed from train ##{train_number}"
   end
 
   def move_train
-    ask_for_train_number
-    ask_where_to_move
+    ask_and_check_train_number
+    ask_and_check_type
     move_train_forward(@trains[train_number]) if move == 1
     move_train_backward(@trains[train_number]) if move == 2
   end
@@ -112,26 +134,42 @@ class Console
     true
   end
 
-  def ask_for_train_number
+  def ask_and_check_train_number
     train_number = ask_for_train
+    validate_train_number!(train_number)
     raise "ERROR: cannot find this train number in the list:#{@trains.keys}" unless @trains.include?(train_number)
     train_number
   end
 
+  def ask_and_check_move
+    move = ask_where_to_move
+    validate_type!(move)
+    move
+  end
+
+  def ask_and_check_type(type_input)
+    type = type_input
+    validate_type!(type)
+    type
+  end
+
   def ask_and_check_station
     station = ask_for_station
+    validate!(station)
     raise "ERROR: cannot find this station in list:#{@stations.keys}" unless @stations.include?(station)
     station
   end
 
   def ask_and_check_wagon_number
     wagon_number = ask_for_wagon
+    validate!(wagon_number)
     raise 'ERROR: there is no wagon with this number' unless @wagons.include?(wagon_number)
     wagon_number
   end
 
   def ask_and_check_route
     route_number = ask_for_route
+    validate!(route_number)
     raise 'ERROR: there is no route with this number' unless @routes.include?(route_number)
     route_number
   end

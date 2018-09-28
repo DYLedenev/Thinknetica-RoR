@@ -5,7 +5,18 @@ class Train
   include Validation
   attr_reader :number, :wagons, :type, :station, :speed, :route
 
+  NUMBER_FORMAT = /^\w{3}\-*\w{2}$/im
+
+  validate :number, :presence
+  validate :wagon, :presence
+  validate :route, :presence
+  validate :number, :format, NUMBER_FORMAT
+  # validate :wagon, :between_many_types, CargoWagon, PassengerWagon
+  # validate :route, :type, Route
+
   @@train_objects = {}
+
+
 
   def self.find(number)
     @@train_objects[number]
@@ -19,7 +30,6 @@ class Train
     @speed = 0
     @@train_objects[number] = self
     register_instance
-    valid_train_number?(number)
   end
 
   def speed_add(speed)

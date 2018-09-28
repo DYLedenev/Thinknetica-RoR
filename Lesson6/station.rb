@@ -5,6 +5,10 @@ class Station
   attr_reader :name, :trains
   @@class_exemplars = []
 
+  validate :name, :presence
+  validate :train, :presence
+  # validate :train, :between_many_types, CargoTrain, PassengerTrain
+
   def self.all
     @@class_exemplars
   end
@@ -14,7 +18,6 @@ class Station
     @trains = {}
     add_exemplar
     register_instance
-    valid_station?(name)
   end
 
   def receive(train)
