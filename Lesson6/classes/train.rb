@@ -32,10 +32,6 @@ class Train
     @speed += speed
   end
 
-  def stop
-    @speed = 0
-  end
-
   def add_wagon(wagon)
     @wagons << wagon if train_stopped?
   end
@@ -45,29 +41,9 @@ class Train
   end
 
   def assign_route(route)
-    route.stations.each { |station| @route << station }
+    @route = route.list
     @station = @route[0]
     @station.receive(self)
-  end
-
-  def station_position
-    @route.index(@station)
-  end
-
-  def last_station?
-    station_position + 1 == @route.length
-  end
-
-  def first_station?
-    station_position.zero?
-  end
-
-  def next_station
-    @route[station_position + 1]
-  end
-
-  def previous_station
-    @route[station_position - 1]
   end
 
   def resite(way)
@@ -94,8 +70,32 @@ class Train
 
   attr_writer :speed, :route
 
+  def stop
+    @speed = 0
+  end
+
   def train_stopped?
     raise "Current speed - #{@speed}. Should be zero (0). Stop the train first." unless @speed.zero?
     true
+  end
+
+  def station_position
+    @route.index(@station)
+  end
+
+  def last_station?
+    station_position + 1 == @route.length
+  end
+
+  def first_station?
+    station_position.zero?
+  end
+
+  def next_station
+    @route[station_position + 1]
+  end
+
+  def previous_station
+    @route[station_position - 1]
   end
 end

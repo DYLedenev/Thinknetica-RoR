@@ -12,6 +12,7 @@ class Console
 
   def create_station
     new_station_name = ask_station_name
+    raise 'ERROR: Station with this name is alrady exist' if @stations.include?(new_station_name)
     @stations[new_station_name] = Station.new(new_station_name)
   end
 
@@ -28,12 +29,8 @@ class Console
     new_route_number = ask_for_new_route_number
     start_end_station = [ask_for_first_station, ask_for_second_station]
     raise 'ERROR: route with the same number already exists' if route_exist?(new_route_number)
-    raise "ERROR: cannot find one of the inputed stations. Existing stations: #{@stations.keys}" unless stations_exist?(start_end_station[0], start_end_station[1])
+    raise "ERROR: cannot find one of the inputed stations. Existing stations: #{existing_stations}" unless stations_exist?(start_end_station[0], start_end_station[1])
     @routes[new_route_number] = Route.new(@stations[start_end_station[0]], @stations[start_end_station[1]])
-  end
-
-  def route_exist?(route_number)
-    @routes.include?(route_number)
   end
 
   def add_station_to_route
@@ -45,7 +42,7 @@ class Console
   def delete_station_from_route
     route_number = ask_and_check_route
     station_name = ask_and_check_station
-    raise "ERROR: there is no such station in the list: #{show_stations_in_route(route_number)}" unless route_has_station?(route_number, station_name)
+    raise "ERROR: there is no station with this name in the list: #{show_stations_in_route(route_number)}" unless route_has_station?(route_number, station_name)
     route_delete_station(route_number, station_name)
   end
 
@@ -86,11 +83,19 @@ class Console
 
   def show_trains_on_station
     station = ask_and_check_station
-    raise "ERROR: There is no station with this name. Existing stations: #{@stations.values.each(&:name)}" unless @stations.include?(station)
+    raise "ERROR: There is no station with this name. List: #{existing_stations}" unless @stations.include?(station)
     puts "LOG: Trains on this station: #{@stations[station].trains_list}" if @stations.include?(station)
   end
 
   protected # console has a child class menu so I picked protected option.
+
+  def existing_stations
+    @stations.keys
+  end
+
+  def route_exist?(route_number)
+    @routes.include?(route_number)
+  end
 
   def create_wagon_for_train(train_number)
     wagon = CargoWagon.new if @trains[train_number].class == CargoTrain
@@ -108,8 +113,8 @@ class Console
   end
 
   def stations_exist?(station1, station2)
-    raise "ERROR: There is no station with name: #{station1}" unless @stations.include?(station1)
-    raise "ERROR: There is no station with name: #{station2}" unless @stations.include?(station2)
+    raise "ERROR: There is no station with name: #{station1}. List: #{existing_stations}" unless @stations.include?(station1)
+    raise "ERROR: There is no station with name: #{station2}. List: #{existing_stations}" unless @stations.include?(station2)
     true
   end
 
@@ -121,7 +126,7 @@ class Console
 
   def ask_and_check_station
     station = ask_for_station
-    raise "ERROR: cannot find this station in list:#{@stations.keys}" unless @stations.include?(station)
+    raise "ERROR: cannot find this station in list: #{existing_stations}" unless @stations.include?(station)
     station
   end
 
