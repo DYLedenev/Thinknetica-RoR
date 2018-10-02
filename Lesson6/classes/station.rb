@@ -25,7 +25,7 @@ class Station
   end
 
   def trains_list
-    @trains.keys.each { |key| puts key }
+    @trains.values.each { |train| return train.number }
   end
 
   def trains_type_amount
@@ -34,8 +34,7 @@ class Station
     train_types
   end
 
-  def departure(train, way)
-    train.resite(way)
+  def departure(train)
     @trains.delete(train.number)
   end
 

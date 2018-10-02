@@ -1,6 +1,5 @@
 # general user interface Class.
 class Console
-  include Validation
   include Questions
 
   def initialize
@@ -38,14 +37,14 @@ class Console
   end
 
   def add_station_to_route
-    ask_and_check_route
-    ask_and_check_station
+    route_number = ask_and_check_route
+    station_name = ask_and_check_station
     include_station_to_route(station_name, route_number)
   end
 
   def delete_station_from_route
-    ask_and_check_route
-    ask_and_check_station
+    route_number = ask_and_check_route
+    station_name = ask_and_check_station
     raise "ERROR: there is no such station in the list: #{show_stations_in_route(route_number)}" unless route_has_station?(route_number, station_name)
     route_delete_station(route_number, station_name)
   end
@@ -57,30 +56,28 @@ class Console
   end
 
   def add_wagon_to_train
-    ask_for_train_number
-    ask_and_check_wagon_number
-    if @trains[train_number].class == CargoTrain
-      wagon = CargoWagon.new
-    elsif @trains[train_number].class == PassengerTrain
-      wagon = PassengerWagon.new
-    end
-    @trains[train_number].add_wagon(wagon)
+    train_number = ask_for_train_number
+    wagon_number = ask_for_wagon
+    raise 'ERROR: the wagon with this number already exist' if @wagons.include?(wagon_number)
+    wagon = create_wagon_for_train(train_number)
     @wagons[wagon_number] = wagon
-    puts "LOG: #{wagon.type} has been successfully added to the train ##{train_number}"
+    @trains[train_number].add_wagon(wagon)
+    puts "LOG: #{wagon.class} has been successfully added to the train ##{train_number}"
   end
 
   def remove_wagons_from_train
-    ask_for_train_number
-    ask_and_check_wagon_number
+    train_number = ask_for_train_number
+    wagon_number = ask_for_wagon
+    raise 'ERROR: there is no wagon with this number' unless @wagons.include?(wagon_number)
     @trains[train_number].delete_wagon(@wagons[wagon_number])
     puts "LOG: wagon #{wagon_number} has been seccessfully removed from train ##{train_number}"
   end
 
   def move_train
-    ask_for_train_number
-    ask_where_to_move
-    move_train_forward(@trains[train_number]) if move == 1
-    move_train_backward(@trains[train_number]) if move == 2
+    train_number = ask_for_train_number
+    move = ask_where_to_move
+    move_train_on_station(@trains[train_number], 'forward') if move == 1
+    move_train_on_station(@trains[train_number], 'backward') if move == 2
   end
 
   def show_stations
@@ -88,11 +85,17 @@ class Console
   end
 
   def show_trains_on_station
-    ask_and_check_station
+    station = ask_and_check_station
     puts "LOG: Trains on this station: #{@stations[station].trains_list}" if @stations.include?(station)
   end
 
   protected # console has a child class menu so I picked protected option.
+
+  def create_wagon_for_train(train_number)
+    wagon = CargoWagon.new if @trains[train_number].class == CargoTrain
+    wagon = PassengerWagon.new if @trains[train_number].class == PassengerTrain
+    wagon
+  end
 
   def assign_route_to_train(train_number, route_number)
     @trains[train_number].assign_route(@routes[route_number])
@@ -121,25 +124,16 @@ class Console
     station
   end
 
-  def ask_and_check_wagon_number
-    wagon_number = ask_for_wagon
-    raise 'ERROR: there is no wagon with this number' unless @wagons.include?(wagon_number)
-    wagon_number
-  end
-
   def ask_and_check_route
     route_number = ask_for_route
     raise 'ERROR: there is no route with this number' unless @routes.include?(route_number)
     route_number
   end
 
-  def move_train_forward(train)
-    train.resite('forward')
-    puts "LOG: train ##{train.number} is moved to #{train.station.name}"
-  end
-
-  def move_train_backward(train)
-    train.resite('backward')
+  def move_train_on_station(train, way)
+    train.station.departure(train)
+    train.resite(way)
+    train.station.receive(train)
     puts "LOG: train ##{train.number} is moved to #{train.station.name}"
   end
 

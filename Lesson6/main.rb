@@ -1,3 +1,4 @@
+require 'pry'
 require_relative 'modules/questions'
 require_relative 'modules/instancecounter'
 require_relative 'modules/validation'

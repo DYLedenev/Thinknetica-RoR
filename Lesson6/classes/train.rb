@@ -28,7 +28,7 @@ class Train
     @speed = 0
     @@train_objects[number] = self
     register_instance
-    valid?
+    # valid?
     puts "LOG: #{type} train ##{number} has been created"
   end
 
@@ -50,7 +50,8 @@ class Train
 
   def assign_route(route)
     route.stations.each { |station| @route << station }
-    @station = route[0]
+    @station = @route[0]
+    @station.receive(self)
   end
 
   def station_position
