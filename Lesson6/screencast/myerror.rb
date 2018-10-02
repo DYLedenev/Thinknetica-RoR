@@ -1,1 +1,0 @@
-class MyError < StandardError; end
