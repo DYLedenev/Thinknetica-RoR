@@ -8,11 +8,7 @@ class Train
   NUMBER_FORMAT = /^\w{3}\-*\w{2}$/im
 
   validate :number, :presence
-  # validate :wagon, :presence
-  # validate :route, :presence
   validate :number, :format, NUMBER_FORMAT
-  # validate :wagon, :between_many_types, CargoWagon, PassengerWagon
-  # validate :route, :type, Route
 
   @@train_objects = {}
 

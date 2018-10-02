@@ -86,6 +86,7 @@ class Console
 
   def show_trains_on_station
     station = ask_and_check_station
+    raise "ERROR: There is no station with this name. Existing stations: #{@stations.values.each(&:name)}" unless @stations.include?(station)
     puts "LOG: Trains on this station: #{@stations[station].trains_list}" if @stations.include?(station)
   end
 
