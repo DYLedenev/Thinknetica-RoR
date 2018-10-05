@@ -1,0 +1,17 @@
+require 'pry'
+require_relative 'modules/questions'
+require_relative 'modules/instancecounter'
+require_relative 'modules/validation'
+require_relative 'modules/manufacturer'
+require_relative 'classes/inputerror'
+require_relative 'classes/console'
+require_relative 'classes/station'
+require_relative 'classes/train'
+require_relative 'classes/route'
+require_relative 'classes/wagon'
+require_relative 'classes/cargo_train'
+require_relative 'classes/pass_train'
+require_relative 'classes/cargo_wagon'
+require_relative 'classes/pass_wagon'
+
+console = Console.new
